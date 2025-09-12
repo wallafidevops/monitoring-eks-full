@@ -5,4 +5,4 @@ type: application
 dependencies:
   - name: loki
     repository: https://grafana.github.io/helm-charts
-    version: ">=5.0.0 <10.0.0"
+    version: "9.4.5"

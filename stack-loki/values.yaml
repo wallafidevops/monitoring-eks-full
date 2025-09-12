@@ -1,6 +1,8 @@
 loki:
   commonConfig:
-    replication_factor: 1 
+    replication_factor: 1
+
+  # enableTableManager: true    
 
   storage:
     type: 'filesystem'
