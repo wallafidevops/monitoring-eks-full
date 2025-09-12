@@ -37,7 +37,7 @@ alertmanager:
 
     alertmanagerConfigSelector:
       matchLabels:
-        release: prd-monitoring-stack 
+        release: kube-prometheus-stack
     replicas: 1
     alertmanagerConfigMatcherStrategy:
       type: None
