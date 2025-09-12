@@ -11,7 +11,7 @@ spec:
   source:
     repoURL: https://github.com/wallafidevops/monitoring-eks-full.git
     targetRevision: main
-    path: stack-grafana-prometheus
+    path: kube-prometheus-stack
     helm:
       valueFiles:
         - values.yaml
