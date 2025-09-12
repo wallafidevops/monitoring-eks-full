@@ -1,30 +1,31 @@
-image:
-  registry: docker.io
-  repository: grafana/promtail
-  tag: 3.4.2
+promtail:
+  image:
+    registry: docker.io
+    repository: grafana/promtail
+    tag: 3.4.2
 
-# Resource configuration
-# resources:
-#   limits:
-#     cpu: 200m
-#     memory: 128Mi
-#   requests:
-#     cpu: 100m
-#     memory: 128Mi
-#   # limits:
-#   #   cpu: 100m
-#   #   memory: 64Mi
-#   # requests:
-#   #   cpu: 50m
-#   #   memory: 64Mi    
+  # Resource configuration
+  # resources:
+  #   limits:
+  #     cpu: 200m
+  #     memory: 128Mi
+  #   requests:
+  #     cpu: 100m
+  #     memory: 128Mi
+  #   # limits:
+  #   #   cpu: 100m
+  #   #   memory: 64Mi
+  #   # requests:
+  #   #   cpu: 50m
+  #   #   memory: 64Mi    
 
-affinity: {}    
+  affinity: {}    
 
-# Tolerations (aceita qualquer taint)
-tolerations:
-  - operator: "Exists"
+  # Tolerations (aceita qualquer taint)
+  tolerations:
+    - operator: "Exists"
 
-# Configuration
-config:
-  clients:
-    - url: http://loki-gateway/loki/api/v1/push
+  # Configuration
+  config:
+    clients:
+      - url: http://loki-gateway/loki/api/v1/push
