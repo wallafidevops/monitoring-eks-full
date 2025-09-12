@@ -1,82 +1,69 @@
-loki:
-  commonConfig:
-    replication_factor: 1
+prometheus:
+  prometheusSpec:
+    retention: 15d
+    storageSpec:
+      volumeClaimTemplate:
+        spec:
+          storageClassName: gp3
+          accessModes: ["ReadWriteOnce"]
+          resources:
+            requests:
+              storage: 50Gi
+    affinity:
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+          - matchExpressions:
+            - key: monitoring
+              operator: In
+              values:
+              - "true"
+    tolerations:
+      - key: "monitoring"
+        operator: "Equal"
+        value: "true"
+        effect: "NoSchedule"
 
-  # enableTableManager: true    
+alertmanager:
+  alertmanagerSpec:
+    storage:
+      volumeClaimTemplate:
+        spec:
+          storageClassName: gp3 
+          accessModes: ["ReadWriteOnce"]
+          resources:
+            requests:
+              storage: 50Gi
 
-  storage:
-    type: 'filesystem'
-    bucketNames:
-      chunks: chunks
-      ruler: ruler
-      admin: admin
+    alertmanagerConfigSelector:
+      matchLabels:
+        release: prd-monitoring-stack 
+    replicas: 1
+    alertmanagerConfigMatcherStrategy:
+      type: None
 
-  schemaConfig:
-    configs:
-      - from: "2024-04-01"
-        store: tsdb
-        object_store: filesystem
-        schema: v13
-        index:
-          prefix: loki_index_
-          period: 24h
+    affinity:
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+          - matchExpressions:
+            - key: monitoring
+              operator: In
+              values:
+              - "true"
+    tolerations:
+      - key: "monitoring"
+        operator: "Equal"
+        value: "true"
+        effect: "NoSchedule"
 
-  storage_config:
-    filesystem:
-      # directory: /tmp/loki/chunks
-      directory: /var/loki/chunks      
-
-  pattern_ingester:
-    enabled: true
-
-  limits_config:
-    allow_structured_metadata: true
-    retention_period: 168h
-    volume_enabled: true
-
-  ruler:
-    enable_api: true
-
-  auth_enabled: false
-
-  minio:
-    enabled: false
-
-deploymentMode: SingleBinary
-
-singleBinary:
-  replicas: 1
-
+grafana:
   persistence:
-    storageClass: gp3
+    enabled: true
+    storageClassName: "gp3"
     accessModes:
       - ReadWriteOnce
-    size: 20Gi
-
-  resources:
-    requests:
-      cpu: "1"
-      memory: "2Gi"
-    limits:
-      cpu: "2"
-      memory: "4Gi"
-
-  tolerations:
-    - operator: "Exists"
-
-  affinity:
-    nodeAffinity:
-      requiredDuringSchedulingIgnoredDuringExecution:
-        nodeSelectorTerms:
-          - matchExpressions:
-              - key: monitoring
-                operator: In
-                values:
-                  - "true"
-
-  nodeSelector: {}
-
-gateway:
+    size: 10Gi
   affinity:
     nodeAffinity:
       requiredDuringSchedulingIgnoredDuringExecution:
@@ -87,52 +74,7 @@ gateway:
                 values:
                   - "true"
   tolerations:
-    - operator: "Exists"
-
-chunksCache:
-  allocatedMemory: 1024
-  affinity:
-    nodeAffinity:
-      requiredDuringSchedulingIgnoredDuringExecution:
-        nodeSelectorTerms:
-          - matchExpressions:
-              - key: monitoring
-                operator: In
-                values:
-                  - "true"
-  tolerations:
-    - operator: "Exists"
-
-resultsCache:
-  affinity:
-    nodeAffinity:
-      requiredDuringSchedulingIgnoredDuringExecution:
-        nodeSelectorTerms:
-          - matchExpressions:
-              - key: monitoring
-                operator: In
-                values:
-                  - "true"
-  tolerations:
-    - operator: "Exists"
-
-sidecar:
-  image:
-    repository: kiwigrid/k8s-sidecar
-    tag: 1.30.0
-  resources:
-    requests:
-      cpu: 50m
-      memory: 50Mi
-    limits:
-      cpu: 100m
-      memory: 100Mi
-
-backend:
-  replicas: 0
-
-read:
-  replicas: 0
-
-write:
-  replicas: 0
+    - key: "monitoring"
+      operator: "Equal"
+      value: "true"
+      effect: "NoSchedule"
