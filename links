@@ -1,0 +1,6 @@
+https://artifacthub.io/packages/helm/prometheus-community/kube-prometheus-stack?modal=install
+
+https://artifacthub.io/packages/helm/grafana/loki?modal=install
+
+
+https://artifacthub.io/packages/helm/grafana/promtail
