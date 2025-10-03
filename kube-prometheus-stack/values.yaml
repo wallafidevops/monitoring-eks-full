@@ -55,6 +55,8 @@ kube-prometheus-stack:
           effect: "NoSchedule"
 
   grafana:
+    adminUser: admin
+    adminPassword: "admin"  
     persistence:
       enabled: true
       storageClassName: gp3
