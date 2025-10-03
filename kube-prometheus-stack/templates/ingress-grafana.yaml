@@ -22,11 +22,19 @@ spec:
   - host: grafana.app.wsnobrega.life
     http:
       paths:
+      # 1) Regra para redirecionar todo HTTP -> HTTPS
       - path: /
         pathType: Prefix
         backend:
           service:
-            name: kube-prometheus-stack-grafana        
+            name: ssl-redirect
+            port:
+              name: use-annotation
+      # 2) Tráfego HTTPS para o serviço do Grafana (porta 80)
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: kube-prometheus-stack-grafana
             port:
               number: 80
- 
