@@ -27,7 +27,6 @@ spec:
         backend:
           service:
             name: kube-prometheus-stack-grafana        
-            # name: argo-cd-monitoring-server
             port:
               number: 80
  
