@@ -25,3 +25,19 @@ spec:
     syncOptions:
       - CreateNamespace=true
       - ServerSideApply=true
+      - RespectIgnoreDifferences=true
+      - PrunePropagationPolicy=Foreground ### remove recursos filhos antes do pai     
+      - PruneLast=true ### remove o último recurso para não ter downtime    
+      - ApplyOutOfSyncOnly=true ### aplica tudo que está fora de sincronia              
+    ignoreDifferences:
+      - group: apps
+        kind: Deployment
+        name: loki
+        jsonPointers:
+            - /spec/replicas
+      - group: autoscaling
+        kind: HorizontalPodAutoscaler
+        name: loki
+        jsonPointers:
+            - /status/currentReplicas
+            - /status/desiredReplicas
