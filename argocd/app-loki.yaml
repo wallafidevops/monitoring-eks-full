@@ -5,11 +5,9 @@ metadata:
   namespace: argocd
 spec:
   project: default
-
   destination:
     server: https://kubernetes.default.svc
-    namespace: loki  
-
+    namespace: loki
   source:
     repoURL: https://github.com/wallafidevops/monitoring-eks-full.git
     targetRevision: main
@@ -17,7 +15,6 @@ spec:
     helm:
       valueFiles:
         - values.yaml
-
   syncPolicy:
     automated:
       prune: true
@@ -26,18 +23,33 @@ spec:
       - CreateNamespace=true
       - ServerSideApply=true
       - RespectIgnoreDifferences=true
-      - PrunePropagationPolicy=Foreground ### remove recursos filhos antes do pai     
-      - PruneLast=true ### remove o último recurso para não ter downtime    
-      - ApplyOutOfSyncOnly=true ### aplica tudo que está fora de sincronia              
-    ignoreDifferences:
-      - group: apps
-        kind: Deployment
-        name: loki
-        jsonPointers:
-            - /spec/replicas
-      - group: autoscaling
-        kind: HorizontalPodAutoscaler
-        name: loki
-        jsonPointers:
-            - /status/currentReplicas
-            - /status/desiredReplicas
+      - PrunePropagationPolicy=Foreground
+      - PruneLast=true
+      - ApplyOutOfSyncOnly=true
+  ignoreDifferences:
+    - group: apps
+      kind: Deployment
+      name: loki-gateway
+      jsonPointers:
+        - /spec/replicas
+    - group: apps
+      kind: StatefulSet
+      name: loki
+      jsonPointers:
+        - /spec/replicas
+    - group: apps
+      kind: StatefulSet
+      name: loki-results-cache
+      jsonPointers:
+        - /spec/replicas
+    - group: apps
+      kind: StatefulSet
+      name: loki-chunks-cache
+      jsonPointers:
+        - /spec/replicas
+    - group: autoscaling
+      kind: HorizontalPodAutoscaler
+      name: loki-gateway
+      jsonPointers:
+        - /status/currentReplicas
+        - /status/desiredReplicas

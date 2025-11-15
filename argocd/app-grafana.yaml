@@ -23,18 +23,30 @@ spec:
       - CreateNamespace=true
       - ServerSideApply=true
       - RespectIgnoreDifferences=true
-      - PrunePropagationPolicy=Foreground ### remove recursos filhos antes do pai     
-      - PruneLast=true ### remove o último recurso para não ter downtime    
-      - ApplyOutOfSyncOnly=true ### aplica tudo que está fora de sincronia              
-    ignoreDifferences:
-      - group: apps
-        kind: Deployment
-        name: monitoring
-        jsonPointers:
-            - /spec/replicas
-      - group: autoscaling
-        kind: HorizontalPodAutoscaler
-        name: monitoring
-        jsonPointers:
-            - /status/currentReplicas
-            - /status/desiredReplicas
+      - PrunePropagationPolicy=Foreground
+      - PruneLast=true
+      - ApplyOutOfSyncOnly=true
+  ignoreDifferences:
+    # ignore de réplicas nos Deployments principais do chart
+    - group: apps
+      kind: Deployment
+      name: kube-prometheus-stack-grafana
+      jsonPointers:
+        - /spec/replicas
+    - group: apps
+      kind: Deployment
+      name: kube-prometheus-stack-operator
+      jsonPointers:
+        - /spec/replicas
+    - group: apps
+      kind: Deployment
+      name: kube-prometheus-stack-kube-state-metrics
+      jsonPointers:
+        - /spec/replicas
+    # se existir HPA, ignore o status
+    - group: autoscaling
+      kind: HorizontalPodAutoscaler
+      name: kube-prometheus-stack-grafana
+      jsonPointers:
+        - /status/currentReplicas
+        - /status/desiredReplicas
