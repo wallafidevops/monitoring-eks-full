@@ -8,7 +8,7 @@ spec:
     - alias: "al2023@latest"
   subnetSelectorTerms:
     - tags:
-        karpenter.sh/discovery: prd-cluster-express" # replace with your cluster name
+        karpenter.sh/discovery: "prd-cluster-express" # replace with your cluster name
   securityGroupSelectorTerms:
     - tags:
         karpenter.sh/discovery: "prd-cluster-express"
