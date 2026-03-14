@@ -35,8 +35,8 @@ metadata:
   name: monitoring
 spec:
   limits:
-    cpu: 6
-    memory: 32Gi
+    cpu: 20
+    memory: 60Gi
   template:
     spec:
       requirements:
